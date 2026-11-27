@@ -53,9 +53,6 @@ export function TopBar() {
       <Suspense fallback={<NavLinks pathname="" />}>
         <ActiveLinks />
       </Suspense>
-      <span className="ml-auto hidden whitespace-nowrap font-mono text-xs text-ra-teal sm:block">
-        ● Datos de ejemplo
-      </span>
     </header>
   );
 }

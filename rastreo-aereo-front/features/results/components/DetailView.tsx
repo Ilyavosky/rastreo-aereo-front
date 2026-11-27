@@ -18,7 +18,7 @@ export function DetailView({ id }: { id: string }) {
     <ResultsGate run={run} error={error} isLoading={isLoading} reload={reload} skeleton={<ResultsSkeleton />}>
       {(current) => (
         <div className="grid flex-1 gap-4 p-4 xl:grid-cols-[650px_1fr]">
-          <DetailMap config={current.scenario} profileId={profileId} />
+          <DetailMap config={current.scenario} profileId={profileId} droneCount={current.drones} points={current.points} />
           <div className="flex min-w-0 flex-col gap-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h1 className="text-xl font-semibold">Resultados · {current.scenarioName}</h1>

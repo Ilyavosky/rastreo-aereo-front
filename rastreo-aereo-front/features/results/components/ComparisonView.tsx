@@ -5,6 +5,7 @@ import { NavButton } from "@/shared/components/NavButton";
 import { Pill } from "@/shared/components/Pill";
 import { GRID, PROFILE_IDS, PROFILES } from "../data/comparison";
 import { useResults } from "../hooks/useResults";
+import { exampleRoutes } from "../services/routes";
 import { MethodCard } from "./MethodCard";
 import { MetricBars } from "./MetricBars";
 import { ResultsGate } from "./ResultsGate";
@@ -16,7 +17,12 @@ export function ComparisonView({ id }: { id: string }) {
 
   return (
     <ResultsGate run={run} error={error} isLoading={isLoading} reload={reload} skeleton={<ResultsSkeleton />}>
-      {(current) => (
+      {(current) => {
+        const { scenario: config, drones, points } = current;
+        const withRoutes = <T extends typeof GRID>(method: T, variant: number) => ({ ...method, routes: exampleRoutes({ sample: method.routes, config, drones, points, variant }) });
+        const variant = PROFILE_IDS.indexOf(profileId);
+
+        return (
         <div className="flex flex-col gap-3 px-4 py-3.5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -33,9 +39,9 @@ export function ComparisonView({ id }: { id: string }) {
             </div>
           </div>
           <div className="ra-stagger grid gap-3 lg:grid-cols-3">
-            <MethodCard title={`AG · ${label}`} color="text-ra-acc" config={current.scenario} metrics={profile.ga} />
-            <MethodCard title="Barrido en cuadrícula" color="text-ra-yellow" config={current.scenario} metrics={GRID} />
-            <MethodCard title={`Azar · ${label}`} color="text-ra-mut" config={current.scenario} metrics={profile.random} />
+            <MethodCard title={`AG · ${label}`} color="text-ra-acc" config={current.scenario} metrics={withRoutes(profile.ga, variant)} />
+            <MethodCard title="Barrido en cuadrícula" color="text-ra-yellow" config={current.scenario} metrics={withRoutes(GRID, 3)} />
+            <MethodCard title={`Azar · ${label}`} color="text-ra-mut" config={current.scenario} metrics={withRoutes(profile.random, variant + 4)} />
           </div>
           <div className="ra-stagger grid gap-3 lg:grid-cols-3">
             <MetricBars title="Detección R_de (%) · más es mejor" metric="rde" max={75} selected={profileId} />
@@ -44,7 +50,8 @@ export function ComparisonView({ id }: { id: string }) {
           </div>
           <p className="text-xs text-ra-yellow">{profile.note} Resultados y rutas de ejemplo: no se calculan en el navegador.</p>
         </div>
-      )}
+        );
+      }}
     </ResultsGate>
   );
 }

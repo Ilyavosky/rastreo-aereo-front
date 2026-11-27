@@ -3,8 +3,8 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useReducedMotion } from "motion/react";
-import { useMemo } from "react";
-import { DRONE_COLORS } from "@/shared/map/MapRoutes";
+import { memo, useMemo } from "react";
+import { droneColor } from "@/shared/map/droneColor";
 import type { Point, ScenarioConfig } from "@/shared/types/domain";
 import { DroneRoute } from "./DroneRoute";
 import { Landmarks } from "./Landmarks";
@@ -19,9 +19,10 @@ export type Scene3DProps = {
   flying: boolean;
   swath?: boolean;
   priority?: boolean;
+  parked?: Point[];
 };
 
-export default function Scene3D({ config, routes, flightSeconds, flying, swath, priority }: Scene3DProps) {
+function Scene3D({ config, routes, flightSeconds, flying, swath, priority, parked }: Scene3DProps) {
   const projector = useMemo(() => createProjector(config), [config]);
   const reduce = Boolean(useReducedMotion());
 
@@ -47,6 +48,7 @@ export default function Scene3D({ config, routes, flightSeconds, flying, swath, 
         shadow-camera-top={8}
         shadow-camera-bottom={-8}
       />
+      <directionalLight position={[-6, 4, -5]} intensity={0.9} color="#cfe0ff" />
       <TerrainMesh config={config} projector={projector} priority={priority} />
       <Trees config={config} projector={projector} />
       <Landmarks config={config} projector={projector} still={reduce} />
@@ -57,11 +59,12 @@ export default function Scene3D({ config, routes, flightSeconds, flying, swath, 
               route={route}
               base={config.base!}
               projector={projector}
-              color={DRONE_COLORS[i % DRONE_COLORS.length]}
+              color={droneColor(i)}
               heightM={FLIGHT_HEIGHTS_M[i % FLIGHT_HEIGHTS_M.length]}
-              seconds={flightSeconds[i] ?? 10}
+              seconds={flightSeconds[i] ?? 10 + (i % 5) * 1.5}
               flying={flying && !reduce}
               swath={swath}
+              parked={parked?.[i]}
             />
           ))
         : null}
@@ -69,3 +72,5 @@ export default function Scene3D({ config, routes, flightSeconds, flying, swath, 
     </Canvas>
   );
 }
+
+export default memo(Scene3D);

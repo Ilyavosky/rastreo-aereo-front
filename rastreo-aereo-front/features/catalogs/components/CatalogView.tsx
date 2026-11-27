@@ -31,9 +31,6 @@ export function CatalogView({ kind }: { kind: CatalogKind }) {
       ) : (
         <CatalogTable kind={kind} items={vm.data} deletingId={vm.deletingId} onEdit={vm.openEdit} onDelete={vm.remove} />
       )}
-      <p className="text-xs text-ra-mut">
-        Valores iniciales ilustrativos: falta calibrarlos y citar su fuente. Cada corrida guarda una copia, así que editar no altera resultados anteriores.
-      </p>
       <ModalFrame title={vm.form?.item ? catalog.editLabel : catalog.addLabel} isOpen={Boolean(vm.form)} onClose={vm.closeForm}>
         {vm.form ? (
           <CatalogForm

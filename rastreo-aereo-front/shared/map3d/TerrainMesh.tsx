@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { Color, PlaneGeometry, BufferAttribute } from "three";
 import type { ScenarioConfig, VegetationType } from "@/shared/types/domain";
+import { Cliffs } from "./Cliffs";
 import { addContours } from "./contours";
 import { EXAGGERATION, vegetationAt, type Projector } from "./terrain";
 
@@ -47,10 +48,7 @@ export function TerrainMesh({ config, projector, priority }: Props) {
       <mesh geometry={geometry} receiveShadow castShadow>
         <meshStandardMaterial vertexColors roughness={0.95} onBeforeCompile={addContours(CONTOUR_M * EXAGGERATION * projector.scale)} />
       </mesh>
-      <mesh position={[0, -0.16, 0]}>
-        <boxGeometry args={[projector.width, 0.3, projector.depth]} />
-        <meshStandardMaterial color="#3a2f26" />
-      </mesh>
+      <Cliffs config={config} projector={projector} segments={SEGMENTS} />
     </group>
   );
 }

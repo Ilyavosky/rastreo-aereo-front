@@ -1,42 +1,36 @@
 "use client";
 
-import { Box, Map as MapIcon, Pencil, Plus } from "lucide-react";
-import { useState } from "react";
-import { NavButton } from "@/shared/components/NavButton";
-import { Pill } from "@/shared/components/Pill";
+import { useMemo } from "react";
 import { MapView } from "@/shared/map/MapView";
+import { MapViewToggle } from "@/shared/map/MapViewToggle";
+import { parkingSpots, previewRoutes } from "@/shared/map/previewRoutes";
 import { SquareFit } from "@/shared/map/SquareFit";
+import { useMapView } from "@/shared/map/useMapView";
 import { Map3D } from "@/shared/map3d/Map3D";
 import type { Scenario } from "@/shared/types/domain";
 
-export function MapPanel({ scenario }: { scenario: Scenario }) {
-  const [relief, setRelief] = useState(true);
+const FLIGHT_SECONDS: number[] = [];
+
+export function MapPanel({ scenario, drones, points }: { scenario: Scenario; drones: number; points: number }) {
+  const { isRelief } = useMapView();
+  const routes = useMemo(() => previewRoutes(scenario.config, drones, points), [scenario.config, drones, points]);
+  const parked = useMemo(() => parkingSpots(scenario.config, routes.length), [scenario.config, routes.length]);
 
   return (
     <div className="flex min-h-[520px] min-w-0 flex-1 flex-col items-center gap-3 p-4">
       <div className="flex w-full flex-wrap items-center justify-between gap-2">
         <h2 className="text-sm font-semibold">Mapa del escenario · {scenario.name}</h2>
         <div className="flex flex-wrap items-center gap-2">
-          <Pill active={!relief} onClick={() => setRelief(false)}>
-            <span className="flex items-center gap-1.5"><MapIcon className="size-3.5" /> Mapa 2D</span>
-          </Pill>
-          <Pill active={relief} onClick={() => setRelief(true)}>
-            <span className="flex items-center gap-1.5"><Box className="size-3.5" /> Relieve 3D</span>
-          </Pill>
-          <NavButton href={`/escenarios/editor/${scenario.id}`}><Pencil className="size-4" /> Editar mapa</NavButton>
-          <NavButton href="/escenarios/editor/nuevo" tone="ghost"><Plus className="size-4" /> Mapa nuevo</NavButton>
+          <MapViewToggle />
         </div>
       </div>
-      {relief ? (
-        <Map3D config={scenario.config} routes={[]} flightSeconds={[]} flying={false} priority />
+      {isRelief ? (
+        <Map3D config={scenario.config} routes={routes} flightSeconds={FLIGHT_SECONDS} flying={false} parked={parked} priority />
       ) : (
         <SquareFit>
-          <MapView config={scenario.config} priority />
+          <MapView config={scenario.config} routes={routes} priority waypoints parked={parked} />
         </SquareFit>
       )}
-      {relief && scenario.config.hills.length === 0 ? (
-        <p className="text-xs text-ra-yellow">Este escenario no tiene colinas, por eso se ve plano. Prueba «Sendero de montaña» o agrega una colina en «Editar mapa».</p>
-      ) : null}
       <p className="font-mono text-xs text-ra-mut">□ base   ● último avistamiento   - - sendero   ━ río   ▨ zona prohibida   ◌ prioridad (solo visual)</p>
     </div>
   );

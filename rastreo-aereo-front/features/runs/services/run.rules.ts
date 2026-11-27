@@ -1,6 +1,6 @@
 import type { Run, RunStatus } from "./run.types";
 
-export const SIMULATED_MS = 6000;
+export const SIMULATED_MS = 16000;
 
 export const STATUS_LABEL: Record<RunStatus, string> = {
   queued: "En cola",

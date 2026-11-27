@@ -1,21 +1,32 @@
 "use client";
 
 import { X } from "lucide-react";
+import { useMemo } from "react";
 import { AppButton } from "@/shared/components/AppButton";
 import { Card } from "@/shared/components/Card";
 import { ErrorState } from "@/shared/components/Feedback";
 import { NavButton } from "@/shared/components/NavButton";
 import { MapView } from "@/shared/map/MapView";
+import { MapViewToggle } from "@/shared/map/MapViewToggle";
+import { previewRoutes } from "@/shared/map/previewRoutes";
 import { SquareFit } from "@/shared/map/SquareFit";
+import { useMapView } from "@/shared/map/useMapView";
+import { Map3D } from "@/shared/map3d/Map3D";
 import { CONVERGENCE } from "../data/convergence";
-import { PREVIEW_ROUTES } from "../data/preview-routes";
 import { useRunProgress } from "../hooks/useRunProgress";
 import { progressOf, STATUS_LABEL } from "../services/run.rules";
 import { ConvergenceCard } from "./ConvergenceCard";
 import { RunProgressSkeleton } from "./RunProgressSkeleton";
 
+const FLIGHT_SECONDS: number[] = [];
+
 export function RunProgressView({ id }: { id: string }) {
   const { run, error, isLoading, reload, cancel, isCancelling } = useRunProgress(id);
+  const { isRelief } = useMapView();
+  const config = run?.scenario;
+  const drones = run?.drones ?? 0;
+  const points = run?.points ?? 0;
+  const routes = useMemo(() => (config ? previewRoutes(config, drones, points) : []), [config, drones, points]);
   if (error) return <ErrorState message={error} onRetry={reload} />;
   if (isLoading || !run) return <RunProgressSkeleton />;
   if (run.status === "failed") return <ErrorState message={run.error ?? "La corrida falló"} />;
@@ -51,9 +62,16 @@ export function RunProgressView({ id }: { id: string }) {
           <p className="text-xs text-ra-mut">La búsqueda llega hasta 90 %; el resto son las líneas base (cuadrícula y azar).</p>
         </Card>
         <Card className="flex flex-1 flex-col items-center gap-2 p-3">
-          <SquareFit>
-            <MapView config={run.scenario} routes={PREVIEW_ROUTES} faint waypoints flying={running} />
-          </SquareFit>
+          <div className="flex w-full justify-end">
+            <MapViewToggle />
+          </div>
+          {isRelief ? (
+            <Map3D config={run.scenario} routes={routes} flightSeconds={FLIGHT_SECONDS} flying={running} />
+          ) : (
+            <SquareFit>
+              <MapView config={run.scenario} routes={routes} faint waypoints flying={running} />
+            </SquareFit>
+          )}
           <p className="text-[11px] text-ra-mut">Vista previa ilustrativa (la API actual entrega rutas al terminar)</p>
         </Card>
       </div>

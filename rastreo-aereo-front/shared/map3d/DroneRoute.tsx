@@ -17,16 +17,21 @@ type Props = {
   seconds: number;
   flying: boolean;
   swath?: boolean;
+  parked?: Point;
 };
 
-export function DroneRoute({ route, base, projector, color, heightM, seconds, flying, swath }: Props) {
+export function DroneRoute({ route, base, projector, color, heightM, seconds, flying, swath, parked }: Props) {
   const flight = useMemo(() => buildFlight(route, base, projector, heightM), [route, base, projector, heightM]);
   const drone = useRef<Group>(null);
   const drop = useRef<Group>(null);
-  const elapsed = useRef(seconds * 0.15);
+  const elapsed = useRef(0);
   const position = useRef(new Vector3());
 
   useFrame((_, delta) => {
+    if (parked) {
+      drone.current?.position.set(...projector.place(parked, 12));
+      return;
+    }
     if (flying) elapsed.current += Math.min(delta, 0.1);
     const point = pointAt(flight, (elapsed.current % seconds) / seconds, position.current);
     drone.current?.position.copy(point);
@@ -45,11 +50,11 @@ export function DroneRoute({ route, base, projector, color, heightM, seconds, fl
           <meshBasicMaterial color={color} />
         </mesh>
       ))}
-      <group ref={drop}>
+      <group ref={drop} visible={!parked}>
         <Line points={[[0, 0, 0], [0, -1, 0]]} color="#ffffff" lineWidth={1} transparent opacity={0.5} />
       </group>
       <group ref={drone}>
-        <QuadDrone color={color} spinning={flying} />
+        <QuadDrone color={color} spinning={flying && !parked} />
       </group>
     </group>
   );

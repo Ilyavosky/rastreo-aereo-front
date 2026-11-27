@@ -5,29 +5,14 @@ import type { MissionData } from "../hooks/useMission";
 import type { MissionForm } from "../hooks/useMissionForm";
 import { EquipmentCheck } from "./EquipmentCheck";
 
-function ReadValue({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="flex flex-1 flex-col gap-[5px]">
-      <span className="text-[11px] font-medium text-ra-mut">{label}</span>
-      <span className="rounded-md border border-ra-line bg-background px-2.5 py-2 font-mono text-[13px]">{value}</span>
-    </div>
-  );
-}
-
 const Title = ({ children }: { children: string }) => <h3 className="text-xs font-medium text-ra-mut">{children}</h3>;
 const Problem = ({ text }: { text?: string }) => (text ? <p role="alert" className="text-xs text-ra-red">{text}</p> : null);
 
 export function ScenarioPanel({ data, form }: { data: MissionData; form: MissionForm }) {
-  const { config } = form.scenario;
   return (
     <aside className="flex shrink-0 flex-col gap-3.5 overflow-y-auto bg-ra-panel p-5 lg:w-80">
       <h2 className="text-[15px] font-semibold">Escenario</h2>
       <FormSelect label="Escenario o plantilla" value={form.scenario.id} options={data.scenarios.map((s) => ({ id: s.id, label: s.name }))} onChange={form.setScenario} />
-      <div className="flex gap-2">
-        <ReadValue label="Ancho (m)" value={config.widthM} />
-        <ReadValue label="Alto (m)" value={config.heightM} />
-        <ReadValue label="Celda (m)" value={config.cellM} />
-      </div>
       <FormSelect label="Persona buscada" value={form.personId} error={form.errors.personId} options={data.persons.map((p) => ({ id: p.id, label: `${p.name} · ${p.criticalDimM} m` }))} onChange={form.setPersonId} />
       <Title>Drones elegibles</Title>
       {data.drones.map((d) => (

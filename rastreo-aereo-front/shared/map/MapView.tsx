@@ -11,20 +11,22 @@ type Props = Omit<SVGProps<SVGSVGElement>, "children"> & {
   waypoints?: boolean;
   flying?: boolean;
   flightSeconds?: number[];
+  parked?: Point[];
   priority?: boolean;
   label?: string;
   children?: ReactNode;
 };
 
-export function MapView({ config, routes, swath, faint, waypoints, flying, flightSeconds, priority, label, children, className = "", ...svg }: Props) {
+export function MapView({ config, routes, swath, faint, waypoints, flying, flightSeconds, parked, priority, label, children, className = "", ...svg }: Props) {
   const { widthM: w, heightM: h, base, lastSeen } = config;
   const u = Math.max(w, h) / 1000;
 
   return (
     <svg {...svg} viewBox={`0 0 ${w} ${h}`} role="img" aria-label={label ?? "Mapa del escenario"} className={`rounded-lg ${className}`}>
       <MapTerrain config={config} priority={priority} />
-      {routes && base ? <MapRoutes routes={routes} base={base} height={h} unit={u} swath={swath} faint={faint} waypoints={waypoints} flying={flying} flightSeconds={flightSeconds} /> : null}
-      {base ? <rect x={base.x - 16 * u} y={h - base.y - 16 * u} width={32 * u} height={32 * u} fill="#fff" /> : null}
+      {parked && base ? <rect x={base.x - 16 * u} y={h - base.y - 16 * u} width={32 * u} height={32 * u} fill="#fff" fillOpacity={0.35} /> : null}
+      {routes && base ? <MapRoutes routes={routes} base={base} height={h} unit={u} swath={swath} faint={faint} waypoints={waypoints} flying={flying} flightSeconds={flightSeconds} parked={parked} /> : null}
+      {base && !parked ? <rect x={base.x - 16 * u} y={h - base.y - 16 * u} width={32 * u} height={32 * u} fill="#fff" /> : null}
       {lastSeen ? (
         <g stroke="#f2c14e" strokeWidth={3 * u}>
           <circle cx={lastSeen.x} cy={h - lastSeen.y} r={14 * u} fill="#f2c14e" />

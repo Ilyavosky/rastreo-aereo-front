@@ -19,7 +19,6 @@ export function RunPanel({ form }: { form: MissionForm }) {
       <h2 className="text-[15px] font-semibold">Corrida</h2>
       <div className="flex gap-2">{input("drones", "Drones (D)")}{input("points", "Puntos (K)")}</div>
       <div className="flex gap-2">{input("population", "Población")}{input("generations", "Generaciones")}</div>
-      <p className="text-[11px] text-ra-mut">Límites: 10 drones · 30 puntos · 500 pob. · 2000 gen.</p>
       <h3 className="text-xs font-medium text-ra-mut">Operadores</h3>
       <div className="flex gap-2">{input("crossover", "Cruce SBX")}{input("eta", "Eta")}{input("sigma", "Mutación σ")}</div>
       <div className="flex gap-2">{input("reserve", "Reserva batería (%)")}{input("separation", "Separación (m)")}</div>

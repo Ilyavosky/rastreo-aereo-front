@@ -1,21 +1,22 @@
 import { array, number, object, string } from "yup";
 
-const numeric = (min: number, max: number) =>
+const atLeast = (min: number) =>
   number()
     .transform((value, original) => (String(original).trim() === "" ? undefined : value))
     .typeError("Número no válido")
     .required("Obligatorio")
-    .min(min, `Mínimo ${min}`)
-    .max(max, `Máximo ${max}`);
+    .min(min, `Mínimo ${min}`);
+
+const numeric = (min: number, max: number) => atLeast(min).max(max, `Máximo ${max}`);
 
 export const missionSchema = object({
   personId: string().required("Elige una persona"),
   droneIds: array(string().required()).required().min(1, "Elige al menos un dron"),
   cameraIds: array(string().required()).required().min(1, "Elige al menos una cámara"),
-  drones: numeric(1, 10).integer("Debe ser entero"),
-  points: numeric(1, 30).integer("Debe ser entero"),
-  population: numeric(4, 500).integer("Debe ser entero"),
-  generations: numeric(1, 2000).integer("Debe ser entero"),
+  drones: atLeast(1).integer("Debe ser entero"),
+  points: atLeast(1).integer("Debe ser entero"),
+  population: atLeast(4).integer("Debe ser entero"),
+  generations: atLeast(1).integer("Debe ser entero"),
   crossover: numeric(0, 1),
   eta: numeric(1, 100),
   sigma: numeric(0, 1),

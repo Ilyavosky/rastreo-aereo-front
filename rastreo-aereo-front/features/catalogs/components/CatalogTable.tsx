@@ -31,14 +31,14 @@ export function CatalogTable({ kind, items, deletingId, onEdit, onDelete }: Prop
               {columns.map((column, i) => (
                 <td key={column.label} className={`py-3 ${i === 0 ? "font-medium" : "font-mono"}`}>{column.value(item)}</td>
               ))}
-              {hasActive ? <td className={`py-3 ${item.active ? "text-ra-teal" : "text-ra-mut"}`}>{item.active ? "● Sí" : "○ No"}</td> : null}
+              {hasActive ? <td className={`py-3 ${item.active ? "text-ra-teal" : "text-ra-mut"}`}>{item.active ? "Sí" : "○ No"}</td> : null}
               <td className="py-3">
                 <div className="flex gap-3 text-xs font-medium text-ra-blue">
                   <button type="button" onClick={() => onEdit(item)} className="flex cursor-pointer items-center gap-1">
-                    <Pencil className="size-3" /> Editar
+                    <Pencil className="size-3" />
                   </button>
                   <button type="button" disabled={deletingId === item.id} onClick={() => onDelete(item.id)} className="flex cursor-pointer items-center gap-1">
-                    {deletingId === item.id ? <Spinner size="sm" color="current" /> : <Trash2 className="size-3" />} Eliminar
+                    {deletingId === item.id ? <Spinner size="sm" color="current" /> : <Trash2 className="size-3" />}
                   </button>
                 </div>
               </td>
