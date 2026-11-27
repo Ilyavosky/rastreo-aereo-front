@@ -66,11 +66,9 @@ export function DetailMap({ config, profileId, droneCount, points }: Props) {
         </div>
       ) : (
         <p className="text-xs text-ra-yellow">
-          {droneCount} drones: las rutas son ilustrativas y no hay tiempo ni energía por dron. Las métricas de la derecha son del ejemplo con 3 drones.
           {droneCount > MAX_DRAWN_DRONES ? ` Solo se dibujan los primeros ${MAX_DRAWN_DRONES}.` : ""}
         </p>
       )}
-      <p className="text-[11px] text-ra-mut">Rutas y reparto por dron de ejemplo.</p>
     </div>
   );
 }

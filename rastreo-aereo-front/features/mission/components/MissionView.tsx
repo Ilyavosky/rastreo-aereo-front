@@ -13,7 +13,7 @@ function MissionWorkspace({ data }: { data: MissionData }) {
   return (
     <div className="ra-stagger flex flex-1 flex-col lg:h-[calc(100dvh-60px)] lg:flex-row">
       <ScenarioPanel data={data} form={form} />
-      <MapPanel scenario={form.scenario} drones={Number(form.params.drones)} points={Number(form.params.points)} />
+      <MapPanel scenario={form.scenario} drones={Number(form.params.drones)} />
       <RunPanel form={form} />
     </div>
   );

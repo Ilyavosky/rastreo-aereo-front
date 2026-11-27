@@ -3,18 +3,18 @@
 import { useMemo } from "react";
 import { MapView } from "@/shared/map/MapView";
 import { MapViewToggle } from "@/shared/map/MapViewToggle";
-import { parkingSpots, previewRoutes } from "@/shared/map/previewRoutes";
+import { parkingSpots } from "@/shared/map/previewRoutes";
 import { SquareFit } from "@/shared/map/SquareFit";
 import { useMapView } from "@/shared/map/useMapView";
 import { Map3D } from "@/shared/map3d/Map3D";
-import type { Scenario } from "@/shared/types/domain";
+import type { Point, Scenario } from "@/shared/types/domain";
 
+const NO_ROUTES: Point[][] = [];
 const FLIGHT_SECONDS: number[] = [];
 
-export function MapPanel({ scenario, drones, points }: { scenario: Scenario; drones: number; points: number }) {
+export function MapPanel({ scenario, drones }: { scenario: Scenario; drones: number }) {
   const { isRelief } = useMapView();
-  const routes = useMemo(() => previewRoutes(scenario.config, drones, points), [scenario.config, drones, points]);
-  const parked = useMemo(() => parkingSpots(scenario.config, routes.length), [scenario.config, routes.length]);
+  const parked = useMemo(() => parkingSpots(scenario.config, drones), [scenario.config, drones]);
 
   return (
     <div className="flex min-h-[520px] min-w-0 flex-1 flex-col items-center gap-3 p-4">
@@ -25,10 +25,10 @@ export function MapPanel({ scenario, drones, points }: { scenario: Scenario; dro
         </div>
       </div>
       {isRelief ? (
-        <Map3D config={scenario.config} routes={routes} flightSeconds={FLIGHT_SECONDS} flying={false} parked={parked} priority />
+        <Map3D config={scenario.config} routes={NO_ROUTES} flightSeconds={FLIGHT_SECONDS} flying={false} parked={parked} priority />
       ) : (
         <SquareFit>
-          <MapView config={scenario.config} routes={routes} priority waypoints parked={parked} />
+          <MapView config={scenario.config} routes={NO_ROUTES} priority parked={parked} />
         </SquareFit>
       )}
       <p className="font-mono text-xs text-ra-mut">□ base   ● último avistamiento   - - sendero   ━ río   ▨ zona prohibida   ◌ prioridad (solo visual)</p>

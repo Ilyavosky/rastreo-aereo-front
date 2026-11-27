@@ -35,7 +35,6 @@ export function ComparisonView({ id }: { id: string }) {
               ))}
               <span className="w-2" />
               <NavButton href={`/corridas/${id}/resultados/detalle`} tone="ghost"><ChartScatter className="size-4" /> Ver rutas y Pareto</NavButton>
-              <NavButton href="/mision"><Plus className="size-4" /> Nueva misión</NavButton>
             </div>
           </div>
           <div className="ra-stagger grid gap-3 lg:grid-cols-3">
@@ -48,7 +47,7 @@ export function ComparisonView({ id }: { id: string }) {
             <MetricBars title="Tiempo (min) · menos es mejor" metric="time" max={19} selected={profileId} />
             <MetricBars title="Energía (Wh) · menos es mejor" metric="energy" max={78} selected={profileId} />
           </div>
-          <p className="text-xs text-ra-yellow">{profile.note} Resultados y rutas de ejemplo: no se calculan en el navegador.</p>
+          <p className="text-xs text-ra-yellow">{profile.note}</p>
         </div>
         );
       }}

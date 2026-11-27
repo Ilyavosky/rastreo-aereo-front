@@ -1,5 +1,6 @@
 "use client";
 
+import { Drone } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -47,7 +48,7 @@ export function TopBar() {
   return (
     <header className="flex h-[60px] shrink-0 items-center gap-7 overflow-x-auto bg-ra-panel px-6">
       <div className="flex items-center gap-2.5">
-        <span className="size-3 rounded-full bg-ra-acc" />
+        <Drone className="size-6 text-ra-acc" aria-hidden="true" />
         <span className="text-[17px] font-semibold">RastroAéreo</span>
       </div>
       <Suspense fallback={<NavLinks pathname="" />}>

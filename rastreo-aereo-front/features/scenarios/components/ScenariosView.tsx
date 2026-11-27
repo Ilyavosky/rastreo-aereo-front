@@ -20,7 +20,6 @@ export function ScenariosView() {
           <Plus className="size-4" /> Nuevo escenario
         </NavButton>
       </div>
-      <h2 className="text-[13px] font-medium text-ra-mut">Plantillas (solo lectura, sirven como punto de partida)</h2>
       <div className="ra-stagger flex flex-wrap gap-4">
         {templates.map((item) => (
           <ScenarioCard key={item.id} scenario={item} />

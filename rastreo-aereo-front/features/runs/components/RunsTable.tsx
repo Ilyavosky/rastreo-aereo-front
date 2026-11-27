@@ -32,12 +32,12 @@ export function RunsTable({ runs, deletingId, onDelete }: Props) {
               <td className="py-3">{run.generation} / {run.generations}</td>
               <td className="py-3">
                 <div className="flex gap-3 text-xs font-medium text-ra-blue">
-                  {run.status === "running" ? <Link className={LINK} href={`/corridas/${run.id}`}><Activity className="size-3" /> Ver avance</Link> : null}
-                  {run.status === "completed" ? <Link className={LINK} href={`/corridas/${run.id}/resultados`}><ChartColumn className="size-3" /> Ver resultados</Link> : null}
-                  {run.status === "failed" ? <Link className={LINK} href={`/corridas/${run.id}`}><Activity className="size-3" /> Ver error</Link> : null}
+                  {run.status === "running" ? <Link className={LINK} href={`/corridas/${run.id}`}><Activity className="size-3" /></Link> : null}
+                  {run.status === "completed" ? <Link className={LINK} href={`/corridas/${run.id}/resultados`}><ChartColumn className="size-3" /></Link> : null}
+                  {run.status === "failed" ? <Link className={LINK} href={`/corridas/${run.id}`}><Activity className="size-3" /></Link> : null}
                   {isFinished(run) ? (
                     <button type="button" disabled={deletingId === run.id} onClick={() => onDelete(run.id)} className={`${LINK} cursor-pointer`}>
-                      {deletingId === run.id ? <Spinner size="sm" color="current" /> : <Trash2 className="size-3" />} Eliminar
+                      {deletingId === run.id ? <Spinner size="sm" color="current" /> : <Trash2 className="size-3" />}
                     </button>
                   ) : null}
                 </div>

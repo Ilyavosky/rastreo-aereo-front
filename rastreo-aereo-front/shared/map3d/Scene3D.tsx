@@ -8,6 +8,7 @@ import { droneColor } from "@/shared/map/droneColor";
 import type { Point, ScenarioConfig } from "@/shared/types/domain";
 import { DroneRoute } from "./DroneRoute";
 import { Landmarks } from "./Landmarks";
+import { QuadDrone } from "./QuadDrone";
 import { createProjector, FLIGHT_HEIGHTS_M } from "./terrain";
 import { TerrainMesh } from "./TerrainMesh";
 import { Trees } from "./Trees";
@@ -64,10 +65,15 @@ function Scene3D({ config, routes, flightSeconds, flying, swath, priority, parke
               seconds={flightSeconds[i] ?? 10 + (i % 5) * 1.5}
               flying={flying && !reduce}
               swath={swath}
-              parked={parked?.[i]}
+              draw={!reduce}
             />
           ))
         : null}
+      {parked?.map((spot, i) => (
+        <group key={i} position={projector.place(spot, 12)}>
+          <QuadDrone color={droneColor(i)} spinning={false} />
+        </group>
+      ))}
       <OrbitControls makeDefault enableDamping minDistance={4} maxDistance={22} maxPolarAngle={Math.PI / 2.15} />
     </Canvas>
   );
