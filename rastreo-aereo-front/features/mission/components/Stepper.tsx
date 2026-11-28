@@ -4,7 +4,7 @@ import { Minus, Plus } from "lucide-react";
 
 type Props = { label: string; value: number; onChange: (value: number) => void };
 
-const BUTTON = "flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-ra-line hover:bg-ra-panel2 disabled:cursor-default disabled:opacity-35";
+const BUTTON = "flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-ra-mut hover:bg-ra-panel2 hover:text-foreground disabled:cursor-default disabled:opacity-35";
 const MAX_TYPED = 999;
 
 export function Stepper({ label, value, onChange }: Props) {
@@ -21,7 +21,7 @@ export function Stepper({ label, value, onChange }: Props) {
         value={value}
         onFocus={(e) => e.target.select()}
         onChange={(e) => set(Number(e.target.value.replace(/\D/g, "")))}
-        className="h-7 w-10 rounded-md border border-ra-line bg-background text-center font-mono text-[13px]"
+        className="h-7 w-10 rounded-md border border-ra-line bg-transparent text-center font-mono text-[13px]"
       />
       <button type="button" aria-label={`Agregar uno: ${label}`} disabled={value >= MAX_TYPED} onClick={() => set(value + 1)} className={BUTTON}>
         <Plus className="size-3.5" />
