@@ -1,7 +1,6 @@
 export const genesPerIndividual = (drones: number, points: number) => drones * points * 4 + 2 * drones;
 
 export const DEFAULT_PARAMS = {
-  drones: "3",
   points: "8",
   population: "60",
   generations: "40",

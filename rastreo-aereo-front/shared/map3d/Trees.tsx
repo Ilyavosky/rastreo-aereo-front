@@ -6,6 +6,11 @@ import { noise, vegetationAt, type Projector, type Vec3 } from "./terrain";
 const DENSITY = { open: 0.02, brush: 0.3, dense: 0.85 };
 const GRID = 52;
 const GREENS = ["#2f7d46", "#3f9455", "#25693c", "#56a35c"];
+const CLIFF_HILLS = 6;
+const MAX_SLOPE = 0.75;
+
+const slopeAt = ({ elevation }: Projector, { x, y }: { x: number; y: number }) =>
+  Math.hypot(elevation(x + 10, y) - elevation(x - 10, y), elevation(x, y + 10) - elevation(x, y - 10)) / 20;
 
 export function Trees({ config, projector }: { config: ScenarioConfig; projector: Projector }) {
   const mesh = useRef<InstancedMesh>(null);
@@ -19,6 +24,7 @@ export function Trees({ config, projector }: { config: ScenarioConfig; projector
       };
       const type = vegetationAt(config, point);
       if (noise(i + 9000) >= DENSITY[type]) continue;
+      if (config.hills.length > CLIFF_HILLS && slopeAt(projector, point) > MAX_SLOPE) continue;
       const size = (type === "dense" ? 0.26 : 0.18) * (0.7 + noise(i + 100) * 0.6);
       list.push({ position: projector.place(point), size });
     }

@@ -1,5 +1,8 @@
 import type { ScenarioConfig, VegetationType } from "@/shared/types/domain";
+import { contourPaths } from "./contourLines";
 import { smoothPath } from "./geometry";
+
+const MANY_HILLS = 6;
 
 const VEGETATION: Record<VegetationType, string> = { open: "#0f1c1b", brush: "#17302a", dense: "#1c3b30" };
 
@@ -19,7 +22,9 @@ export function MapTerrain({ config, priority }: { config: ScenarioConfig; prior
           <path key={t} d={`M${t * w} 0V${h}M0 ${t * h}H${w}`} />
         ))}
       </g>
-      {config.hills.map((hill, i) =>
+      {config.hills.length > MANY_HILLS
+        ? contourPaths(config).map(({ level, share, d }) => <path key={level} d={d} fill="none" stroke="#b9a678" strokeOpacity={0.25 + share * 0.55} strokeWidth={1.6 * u} />)
+        : config.hills.map((hill, i) =>
         [1, 2, 3, 4, 5].map((k) => (
           <ellipse key={`${i}-${k}`} cx={hill.x} cy={h - hill.y} rx={(hill.sigmaM * 2 * k) / 5} ry={(hill.sigmaM * 1.6 * k) / 5} fill="none" stroke="#7fa89a" strokeOpacity={0.3} strokeWidth={2 * u} />
         )),

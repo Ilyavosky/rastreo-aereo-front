@@ -4,7 +4,7 @@ import { Spinner } from "@heroui/react";
 import { Box, RotateCcw } from "lucide-react";
 import dynamic from "next/dynamic";
 import { Component, useState, type ReactNode } from "react";
-import { EXAGGERATION } from "./terrain";
+import { reliefExaggeration } from "./terrain";
 import type { Scene3DProps } from "./Scene3D";
 
 function Notice({ children }: { children: ReactNode }) {
@@ -45,6 +45,7 @@ class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean
 
 export function Map3D(props: Scene3DProps) {
   const [view, setView] = useState(0);
+  const exaggeration = reliefExaggeration(props.config);
   const [supported] = useState(() => typeof document !== "undefined" && Boolean(document.createElement("canvas").getContext("webgl2")));
 
   return (
@@ -62,7 +63,7 @@ export function Map3D(props: Scene3DProps) {
         <RotateCcw className="size-3.5" /> Restablecer vista
       </button>
       <p className="pointer-events-none absolute inset-x-0 bottom-0 bg-background/85 px-2 py-1.5 text-center text-[11px] text-ra-mut">
-        Arrastra para girar · rueda para acercar · clic derecho para mover · relieve exagerado ×{EXAGGERATION}
+        Arrastra para girar · rueda para acercar · clic derecho para mover · {exaggeration > 1 ? `relieve exagerado ×${exaggeration}` : "relieve sin exagerar"}
       </p>
     </div>
   );

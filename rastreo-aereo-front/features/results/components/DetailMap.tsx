@@ -11,13 +11,15 @@ import { SquareFit } from "@/shared/map/SquareFit";
 import { useMapView } from "@/shared/map/useMapView";
 import { Map3D } from "@/shared/map3d/Map3D";
 import { FLIGHT_HEIGHTS_M } from "@/shared/map3d/terrain";
+import type { Assignment } from "@/features/runs/services/run.types";
 import type { ScenarioConfig } from "@/shared/types/domain";
 import { PROFILE_IDS, PROFILES, type ProfileId } from "../data/comparison";
+import { fleetSummary } from "../services/fleetSummary";
 import { exampleRoutes } from "../services/routes";
 
-type Props = { config: ScenarioConfig; profileId: ProfileId; droneCount: number; points: number };
+type Props = { config: ScenarioConfig; profileId: ProfileId; droneCount: number; points: number; fleet?: Assignment[] };
 
-export function DetailMap({ config, profileId, droneCount, points }: Props) {
+export function DetailMap({ config, profileId, droneCount, points, fleet }: Props) {
   const [swath, setSwath] = useState(true);
   const [priority, setPriority] = useState(false);
   const [flying, setFlying] = useState(true);
@@ -57,17 +59,28 @@ export function DetailMap({ config, profileId, droneCount, points }: Props) {
         <div className="grid gap-2.5 sm:grid-cols-3">
           {sample.map((d, i) => (
             <div key={d.name} className="rounded-lg border bg-ra-panel p-3" style={{ borderColor: droneColor(i) }}>
-              <h3 className="text-[13px] font-semibold" style={{ color: droneColor(i) }}>{d.name} · {d.drone}</h3>
-              <p className="text-xs text-ra-mut">{d.camera}</p>
+              <h3 className="text-[13px] font-semibold" style={{ color: droneColor(i) }}>{d.name} · {fleet?.[i]?.drone ?? d.drone}</h3>
+              <p className="text-xs text-ra-mut">{fleet?.[i]?.camera ?? d.camera}</p>
               <p className="font-mono text-xs">{d.time.toFixed(1)} min · {d.energy.toFixed(1)} Wh</p>
               {isRelief ? <p className="text-[11px] text-ra-mut">Altura de vuelo ilustrativa: {FLIGHT_HEIGHTS_M[i]} m</p> : null}
             </div>
           ))}
         </div>
       ) : (
+        <>
+          {fleet ? (
+            <ul aria-label="Flota de la corrida" className="grid gap-2.5 sm:grid-cols-3">
+              {fleetSummary(fleet).map(({ label, count }) => (
+                <li key={label} className="rounded-lg border border-ra-line bg-ra-panel p-3 text-xs">
+                  <span className="font-mono text-sm font-semibold text-ra-teal">{count} ×</span> {label}
+                </li>
+              ))}
+            </ul>
+          ) : null}
         <p className="text-xs text-ra-yellow">
           {droneCount > MAX_DRAWN_DRONES ? ` Solo se dibujan los primeros ${MAX_DRAWN_DRONES}.` : ""}
         </p>
+        </>
       )}
     </div>
   );

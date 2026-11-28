@@ -36,11 +36,11 @@ export function MapRoutes({ routes, base, height, unit, swath, faint, waypoints,
         };
         return (
           <g key={`${i}-${d}`} stroke={color}>
-            {swath ? <motion.path {...draw} d={d} strokeOpacity={0.14} strokeWidth={80} /> : null}
-            <motion.path {...draw} d={d} strokeWidth={faint ? 4 : 5} strokeOpacity={faint ? 0.45 : 1} />
+            {swath ? <motion.path {...draw} d={d} strokeOpacity={0.14} strokeWidth={80 * unit} /> : null}
+            <motion.path {...draw} d={d} strokeWidth={(faint ? 4 : 5) * unit} strokeOpacity={faint ? 0.45 : 1} />
             {waypoints
               ? route.map((p, k) => (
-                  <circle key={k} cx={p.x} cy={height - p.y} r={8} fill="#0f1c1b" strokeWidth={3.5} className="ra-appear" style={{ animationDelay: `${(i % 5) * 0.15 + (DRAW_SECONDS * (k + 1)) / (route.length + 1)}s` }} />
+                  <circle key={k} cx={p.x} cy={height - p.y} r={8 * unit} fill="#0f1c1b" strokeWidth={3.5 * unit} className="ra-appear" style={{ animationDelay: `${(i % 5) * 0.15 + (DRAW_SECONDS * (k + 1)) / (route.length + 1)}s` }} />
                 ))
               : null}
             {flying && !reduce ? <DroneFlight path={d} color={color} size={38 * unit} seconds={flightSeconds?.[i] ?? 10 + (i % 5) * 1.5} /> : null}

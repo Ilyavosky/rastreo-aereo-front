@@ -1,4 +1,4 @@
-import { array, number, object, string } from "yup";
+import { number, object, string } from "yup";
 
 const atLeast = (min: number) =>
   number()
@@ -11,9 +11,7 @@ const numeric = (min: number, max: number) => atLeast(min).max(max, `Máximo ${m
 
 export const missionSchema = object({
   personId: string().required("Elige una persona"),
-  droneIds: array(string().required()).required().min(1, "Elige al menos un dron"),
-  cameraIds: array(string().required()).required().min(1, "Elige al menos una cámara"),
-  drones: atLeast(1).integer("Debe ser entero"),
+  drones: number().required().min(1, "Agrega al menos un dron a la flota"),
   points: atLeast(1).integer("Debe ser entero"),
   population: atLeast(4).integer("Debe ser entero"),
   generations: atLeast(1).integer("Debe ser entero"),
